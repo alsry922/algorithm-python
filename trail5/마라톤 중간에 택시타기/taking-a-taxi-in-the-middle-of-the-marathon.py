@@ -5,23 +5,26 @@ x = [p[0] for p in points]
 y = [p[1] for p in points]
 
 # Please write your code here.
-L = [0 for _ in range(n)]
-R = [0 for _ in range(n)]
+L = [0] * n
+R = [0] * n
 
 for i in range(1, n):
-    x1, y1 = x[i - 1], y[i - 1]
-    x2, y2 = x[i], y[i]
-    L[i] = L[i - 1] + abs(x1 - x2) + abs(y1 - y2)
+    x1, y1 = points[i - 1]
+    x2, y2 = points[i]
+    dist = abs(x1 - x2) + abs(y1 - y2)
+    L[i] = L[i - 1] + dist
 
 for i in range(n - 2, -1, -1):
-    x1, y1 = x[i], y[i]
-    x2, y2 = x[i + 1], y[i + 1]
-    R[i] = R[i + 1] + abs(x1 - x2) + abs(y1 - y2)
+    x1, y1 = points[i + 1]
+    x2, y2 = points[i]
+    dist = abs(x1 - x2) + abs(y1 - y2)
+    R[i] = R[i + 1] + dist
 
 answer = sys.maxsize
 for i in range(1, n - 1):
-    x1, y1 = x[i - 1], y[i - 1]
-    x2, y2 = x[i + 1], y[i + 1]
-    answer = min(answer, L[i - 1] + R[i + 1] + abs(x1 - x2) + abs(y1 - y2))
+    x1, y1 = points[i - 1]
+    x2, y2 = points[i + 1]
+    dist = abs(x1 - x2) + abs(y1 - y2)
+    answer = min(answer, L[i - 1] + R[i + 1] + dist)
 
 print(answer)
