@@ -2,22 +2,26 @@ n = int(input())
 word = input()
 
 # Please write your code here.
-C = [0] * n
-W = [0] * n
+pcnt = [0] * (n + 1) # 0 ~ i - 1 까지 c의 갯수
+scnt = [0] * (n + 1) # i ~ n - 1까지 w의 갯수
 
-C[0] = 1 if word[0] == 'C' else 0
-for i in range(1, n):
-    cnt = 1 if word[i] == 'C' else 0
-    C[i] = C[i - 1] + cnt
+for i in range(1, n + 1):
+    if word[i - 1] == 'C':
+        pcnt[i] = pcnt[i - 1] + 1
+    else:
+        pcnt[i] = pcnt[i - 1]
 
-W[-1] = 1 if word[-1] == 'W' else 0
-for i in range(n - 2, -1, -1):
-    cnt = 1 if word[i] == 'W' else 0
-    W[i] = W[i + 1] + cnt
+for i in range(n - 1, -1, -1):
+    if word[i] == 'W':
+        scnt[i] = scnt[i + 1] + 1
+    else:
+        scnt[i] = scnt[i + 1]
 
 answer = 0
 for i in range(n):
-    if word[i] == 'O' and 0 < i < n - 1:
-        answer += (C[i - 1] * W[i + 1])
-print(answer)
+    if word[i] != 'O':
+        continue
     
+    answer += (pcnt[i] * scnt[i + 1])
+
+print(answer)
