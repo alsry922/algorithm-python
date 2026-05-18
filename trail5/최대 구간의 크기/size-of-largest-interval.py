@@ -2,12 +2,10 @@ import sys
 input = sys.stdin.readline
 n = int(input())
 intervals = [tuple(map(int, input().split())) for _ in range(n)]
-a, b = zip(*intervals)
-a, b = list(a), list(b)
 
 # Please write your code here.
 points = []
-for index, (x1, x2) in enumerate(zip(a, b)):
+for index, (x1, x2) in enumerate(intervals):
     points.append((x1, +1, index + 1))
     points.append((x2, -1, index + 1))
 
@@ -30,3 +28,4 @@ for x, v, num in points:
             max_seg_leng = max(max_seg_leng, end - start)
 
 print(max_seg_leng)
+
