@@ -11,43 +11,29 @@ for _ in range(n):
 segments.sort()
 covered = SortedSet()
 cnt = 0
-for segment in segments:
-    _, x1, x2 = segment
-    # 히나도 없으면 제일 앞에 있는 선분이므로 보임.
-    if not covered:
-        covered.add((x1, x2))
-        cnt += 1
-        continue
+for y, x1, x2 in segments:
+    # 완전히 겹치는 경우는 제외
+    checkIdx = covered.bisect_right((x1, x2)) - 1
+    if checkIdx >= 0:
+        cx1, cx2 = covered[checkIdx]
+        if cx1 <= x1 and x2 <= cx2:
+            continue
     
-    # 앞에 있는 선분과 겹치는 선분이 있는지 확인
-    idx = covered.bisect_right((x1, x2)) - 1
-    if idx < 0:
-        idx += 1
-    
-    # 현재 선분이 앞에 있는 선분에 완전히 겹쳐진다면 넘어가기.
-    cx1, cx2 = covered[idx]
-    if cx1 <= x1 and x2 <= cx2:
-        continue
-    # 만약 완전히 겹치지 않는다면 보이는 거임
+    # 완전히 겹치는 경우가 아니면 선분이 보임
     cnt += 1
+    # 현재 선분과 겹치는 선분이 존재하는지 확인
     to_remove = []
-    # 현재 선분과 겹치는 선분을 파악하기
     mx1, mx2 = x1, x2
-    for i in range(idx, len(covered)):
+    for i in range(max(0, checkIdx), len(covered)):
         cx1, cx2 = covered[i]
         if cx1 > x2:
             break
-        if cx1 < x1 < cx2 or cx1 < x2 < cx2 or x1 < cx1 and cx2 < x2:
+        if not (cx2 < x1) and not (x2 < cx1):
+            to_remove.append((cx1, cx2))
             mx1 = min(mx1, cx1)
             mx2 = max(mx2, cx2)
-            to_remove.append(covered[i])
-    # 겹치는 선분이 없으면 covered에 추가
-    if not to_remove:
-        covered.add((x1, x2))
-    else:
-        # 겹치는 선분을 covered에서 merge해서 하나의 선분으로 처리하기
-        for ele in to_remove:
-            covered.remove(ele)
-        covered.add((mx1, mx2))
-
+    # 겹치는 선분을 병합하여 하나의 선분으로 만듦
+    for ele in to_remove:
+        covered.remove(ele)
+    covered.add((mx1, mx2))
 print(cnt)
