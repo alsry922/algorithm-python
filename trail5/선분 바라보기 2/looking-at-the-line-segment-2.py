@@ -1,4 +1,4 @@
-from sortedcontainers import SortedSet
+import heapq
 n = int(input())
 
 points = []
@@ -9,20 +9,24 @@ for i in range(n):
 
 # Please write your code here.
 points.sort()
-segs = SortedSet()
+segs = []
+deleted = set()
 visible = [False] * n
 cnt = 0
 for x, v, index, y in points:
+    # 시작점이면 추가
     if v == 1:
-        segs.add((y, index))
-    
+        heapq.heappush(segs, (y, index))
     else:
-        segs.remove((y, index))
+        deleted.add((y, index))
     
     if not segs:
         continue
     
-    if not visible[segs[0][1]]:
+    while segs and segs[0] in deleted:
+        heapq.heappop(segs)
+    
+    if segs and not visible[segs[0][1]]:
         visible[segs[0][1]] = True
         cnt += 1
 
