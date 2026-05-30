@@ -1,7 +1,6 @@
 import math
 n, k = map(int, input().split())
 arr = [int(input()) for _ in range(n)]
-MAX_K = 200001
 # Please write your code here.
 # 같은 수가 어느 위치에 나왔는지 보관
 num_count = {}
