@@ -7,7 +7,7 @@ numbers = [0] + [int(input()) for _ in range(n)]
 # 연속하여 고른 수들이니까 슬라이딩 윈도우로 브루트 포스 수행
 NUM = 7
 prefix = [0] * (n + 1)
-for i in range(n + 1):
+for i in range(1, n + 1):
     prefix[i] = prefix[i - 1] + numbers[i]
 
 preprocess = [ele % NUM for ele in prefix]
