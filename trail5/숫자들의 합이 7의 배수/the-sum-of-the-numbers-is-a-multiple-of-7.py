@@ -2,19 +2,23 @@ n = int(input())
 numbers = [0] + [int(input()) for _ in range(n)]
 
 # Please write your code here.
+
 remainders = [0] * (n + 1)
-counting = [-1] * 7
+min_idx = [-1] * 7
 sum_val = 0
 for i in range(1, n + 1):
     sum_val += numbers[i]
     remainders[i] = sum_val % 7
 
-j = 0
+# print(numbers)
+# print(remainders)
+# print(min_idx)
+
 answer = 0
 for i in range(n + 1):
-    if counting[remainders[i]] == -1:
-        counting[remainders[i]] = i
-    else:
-        answer = max(answer, i - counting[remainders[i]])
-    
+    if min_idx[remainders[i]] == -1:
+        min_idx[remainders[i]] = i
+    answer = max(answer, i - min_idx[remainders[i]]
+    )
+
 print(answer)
