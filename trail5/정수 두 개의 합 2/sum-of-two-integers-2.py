@@ -4,14 +4,16 @@ arr = [int(input()) for _ in range(n)]
 
 # Please write your code here.
 arr.sort()
-# print(arr)
+i, j = 0, n-1
 count = 0
+
 for i in range(n):
-    a = arr[i]
-    b = k - arr[i]
-    r_idx = bisect_right(arr, b) - 1
-    # print(i, a, b, r_idx)
-    if r_idx > 0 and r_idx > i:
-        count += (r_idx - i)
+    while j >= 0 and arr[i] + arr[j] > k:
+        j -= 1
+    
+    if j < 0 or i >= j:
+        break
+    
+    count += (j - i)
 
 print(count)
