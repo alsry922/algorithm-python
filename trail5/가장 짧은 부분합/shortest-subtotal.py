@@ -1,21 +1,22 @@
 n, s = map(int, input().split())
-arr = [0] + list(map(int, input().split()))
+arr = list(map(int, input().split()))
 
 # Please write your code here.
-sum_val = 0
-j = 0
-MAX_RANGE = 100000
-answer = MAX_RANGE
-for i in range(1, n + 1):
-    while j + 1 <= n and sum_val < s:
-        sum_val += arr[j + 1]
+
+MAX_LENGTH = 100000
+sum_val = 0 # 지금까지의 합
+j = 0 # 다음 뽑을 인덱스
+answer = MAX_LENGTH
+for i in range(n):
+    while j < n and sum_val < s:
+        sum_val += arr[j]
         j += 1
     
-    if j + 1 > n:
+    if sum_val < s:
         break
     
-    answer = min(answer, j + 1 - i)
+    answer = min(answer, j - i)
 
     sum_val -= arr[i]
 
-print(answer if answer != MAX_RANGE else -1)
+print(-1 if answer == MAX_LENGTH else answer)
