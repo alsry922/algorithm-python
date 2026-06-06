@@ -9,16 +9,8 @@ for i in range(m):
     while j < n and A[j] != B[i]:
         j += 1
     
-    # 다 살펴보았는데 조건을 만족하지 못해서 while 문을 빠져나옴
     if j == n:
         is_subsequence = False
         break
     
-    if A[j] == B[i]:
-        j += 1
-
-
-if is_subsequence:
-    print('Yes')
-else:
-    print('No')
+print('Yes' if is_subsequence else 'No')
