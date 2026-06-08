@@ -1,17 +1,17 @@
 n, k = map(int, input().split())
-arr = [0] + [int(input()) for _ in range(n)]
+arr = [int(input()) for _ in range(n)]
 
 # Please write your code here.
 arr.sort()
-j = n
-count = 0
-for i in range(1, n + 1):
-    while j > i and arr[i] + arr[j] > k:
+j = n - 1
+answer = 0
+for i in range(n):
+    while j >= 0 and arr[i] + arr[j] > k:
         j -= 1
-
+    
     if i >= j:
         break
     
-    count += (j - i)
+    answer += (j - i)
 
-print(count)
+print(answer)
