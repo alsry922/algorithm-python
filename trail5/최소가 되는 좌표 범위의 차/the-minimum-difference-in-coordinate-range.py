@@ -1,33 +1,28 @@
 from sortedcontainers import SortedList
-MAX_X = 1000000
-
 n, d = map(int, input().split())
-points = [tuple(map(int, input().split())) for _ in range(n)]
-# x, y = zip(*points)
-# x, y = list(x), list(y)
+points = [(-1, -1)] + [tuple(map(int, input().split())) for _ in range(n)]
+x, y = zip(*points)
+x, y = list(x), list(y)
 
 # Please write your code here.
-answer = MAX_X
+# y 좌표값을 기준으로 좌표 오름차순 정렬
 points.sort(key=lambda x: x[1])
-px = SortedList([x[0] for x in points])
-# points = [(-1, -1)] + points
-# y를 기준으로 좌표를 정렬한다.
-
-
+# x 좌표값만 오름차순 정렬
+px = SortedList(x)
+MAX = float('inf')
+answer = MAX
 j = 0
-for i in range(n - 1):
-    # i인덱스 좌표와, j인덱스 좌표의 y값 차이가 D 미만인 경우
-    while j < n and points[j][1] - points[i][1] < d:
-        # D 미만인 구간의 x좌표는 필요없으므로 px에서 제거한다.
-        px.remove(points[j][0])
-        # j를 증가시킨다.
+
+for i in range(1, n + 1):
+    while j + 1 <= n and points[j + 1][1] - points[i][1] < d:
+        px.remove(points[j + 1][0])
         j += 1
-    # y값 차이가 D 이상인 경우가 나오면 while문을 종료한다.
-    xi = points[i][0]
-    pos = px.bisect_left(xi)
-    if pos < len(px):
-        answer = min(answer, abs(px[pos] - xi))
-    if pos > 0:
-        answer = min(answer, abs(px[pos - 1] - xi))
-        
-print(-1 if answer == MAX_X else answer)
+
+    xi = px.bisect_left(points[i][0])
+    if xi < len(px):
+        answer = min(answer, abs(points[i][0] - px[xi]))
+    if xi > 0:
+        ansswer = min(answer, abs(points[i][0] - px[xi - 1]))
+    
+
+print(-1 if answer == MAX else answer)
