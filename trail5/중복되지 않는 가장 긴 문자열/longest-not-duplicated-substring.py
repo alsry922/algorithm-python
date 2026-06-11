@@ -1,4 +1,4 @@
-word = [None] + list(input())
+word = list(input())
 
 # Please write your code here.
 # 투 포인터 i, j를 증가시키며 원소를 살핀다.
@@ -8,11 +8,11 @@ word = [None] + list(input())
 j = 0
 answer = 1
 n = len(word)
-substr = set()
-for i in range(1, n):
-    if i > j:
-        j += 1
-        substr.add(word[j])
+substr = set(word[0])
+for i in range(n):
+    # if i > j:
+    #     j += 1
+    #     substr.add(word[j])
 
     while j + 1 < n and word[j + 1] not in substr:
         substr.add(word[j + 1])
