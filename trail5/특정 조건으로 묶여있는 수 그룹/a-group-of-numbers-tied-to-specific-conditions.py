@@ -2,36 +2,58 @@ n, k = map(int, input().split())
 nums = [int(input()) for _ in range(n)]
 
 # Please write your code here.
+# 배열을 두 개의 그룹으로 나누고, 그룹 내 수들끼리의 차가 k를 넘지 않아야 함
+# 그룹에 속하지 않는 수들이 있을 수 있음.
+# 그룹에 속하는 수들이 최대 몇 개가 될 수 있는지 출력.
+
+# 그룹을 나눴을 때 두 그룹이 정렬된 상태라면, 각 그룹의 최대, 최소의 차가 K 를 넘지 않으면 됨.
+#   배열을 정렬한 상태에서 그룹을 나누면 될 것 같음.
+#   정렬된 배열에서 구간을 나눈다면 연속된 윈도우를 갖게 됨.
+#       정렬된 구간의 최대, 최소 원소의 차가 k를 넘지 않아야 하니까.
+#   그룹이 두 개여야 하니까 두 개의 윈도우를 설정해야 함.
+#      하나는 아래에서부터 탐색해서 구간을 정하고,
+#       하나는 뒤에서부터 탐색해서 구간을 정한다.
+# 두 그룹은 동일 원소를 포함하지 않음.(같은 값의 원소가 아닌 동일 원소임)
+#   정렬된 배열에서 동일 원소를 포함하지 않는 두 그룹은 특정 p의 위치를 기준으로 나누어 질 수 있음.
+#   두 연속 구간 [l1, r1], [l2, r2]은 무조건 r1 < l2 혹은 r2 < l1 이 됨.
+#   이 두 값 사이 어딘가에 분할점 p를 잡으면 항상 왼쪽/오른쪽으로 분리 가능.
+#   특정 p의 위치까지 봤을 때 그룹을 정할 수 있는 조건을 만족하는 원소의 갯수를 미리 계산해놓으면
+#   필요할 때 참조를 통해 O(1)로 처리할 수 있음.
+#   LR 테크닉 사용
+#       L[p] = [0, p] 위치까지 봤을 때 조건을 만족하는 그룹의 최대 원소 갯수
+#       R[p] = [p, n-1] 위치까지 봤을 때 조건을 만족하는 그룹의 최대 원소 갯수
+#       L[p] + R[p + 1] 중 max 값을 구하면 답이 됨.
 nums.sort()
-left_best = [0] * (n)
-right_best = [0] * (n)
-# 그룹 내 최솟값과 최댓값의 차가 K를 넘지 않도록 그룹을 구성한다.
-# nums를 정렬하고 two pointer를 사용한다.
-# 정렬한 상태에서 i, j 투 포인터를 사용해서 그룹에 수를 추가하면,
-# 자연스럽게 i 위치의 수가 그룹의 최솟값, j 위치의 수가 그룹의 최댓값이 된다.
-# nums[j] - nums[i](정렬된 상태이기 때문에 j위치 수가 i위치 수 보다 크다는 것이 확실함)값이 K 이하인 경우,
-# j위치의 수를 그룹에 추가하고 j를 증가시키는 과정을 반복한다.
-# nums[j] - nums[i] 의 값이 K 초과인 경우 반복문을 탈출한다.
-# left_best[p] = [0, p] 구간 안에서 만들 수 있는 최대 그룹 크기
-# right_best[p] = [p, n - 1] 구간 안에서 만들 수 있는 최대 그룹 크기
-
-i = 0 # 왼쪽 끝
-for j in range(n): # j는 오른쪽 끝
-    while nums[j] - nums[i] > k:
+L = [0] * n
+R = [0] * n
+L[0] = 1
+R[n - 1] = 1
+i = 0
+for j in range(1, n):
+    # j까지 봤을 때, 조건을 만족하는 그룹의 최대 원소 갯수
+    while i <= j and nums[j] - nums[i] > k:
         i += 1
-    left_best[j] = max(left_best[j - 1] if j > 0 else 0, j - i + 1)
+    # i < j까지 다 봤는데 nums[j] - nums[i] <= k 조건을 만족한 것이 없으면
+    # 그룹으로 뽑을 수 있는 건 끝 원소인 i번째 원소 ㅎ
+    if i == j:
+        cnt = 1
+    else:
+        cnt = j - i + 1
+    L[j] = max(L[j - 1], cnt)
 
-# print(left_best)
-i = n - 1 # 오른쪽 끝
-for j in range(n - 1, -1, -1): # j는 왼쪽 끝
-    while nums[i] - nums[j] > k:
-        i -= 1
-    right_best[j] = max(right_best[j + 1] if j < n - 1 else 0, i - j + 1)
-
-# print(right_best)
+j = n - 1
+for i in range(n - 2, -1, -1):
+    while i <= j and nums[j] - nums[i] > k:
+        j -= 1
+    
+    if i == j:
+        cnt = 1
+    else:
+        cnt = j - i + 1
+    R[i] = max(R[i + 1], cnt)
 
 answer = 0
 for i in range(n - 1):
-    answer = max(answer, left_best[i] + right_best[i + 1])
+    answer = max(answer, L[i] + R[i + 1])
 
 print(answer)
