@@ -18,16 +18,15 @@ j = 0
 MAX = sys.maxsize
 answer = MAX
 for i in range(1, n + 1):
-    while j + 1 <= n and abs(points[j + 1][1] - points[i][1]) < d:
+    while j + 1 <= n and abs(points[i][1] - points[j + 1][1]) < d:
         px.remove(points[j + 1][0])
         j += 1
 
     xi = px.bisect_left(points[i][0])
     if xi < len(px):
-        answer = min(answer, abs(points[i][0] - px[xi]))
-    if xi > 0:
-        ansswer = min(answer, abs(points[i][0] - px[xi - 1]))
-    
+        answer = min(answer, abs(px[xi] - points[i][0]))
+    if xi > 1:
+        answer = min(answer, abs(px[xi - 1] - points[i][0]))
 
 print(-1 if answer == MAX else answer)
 
@@ -55,7 +54,7 @@ print(-1 if answer == MAX else answer)
 #     if xi < len(px):
 #         answer = min(answer, abs(points[i][0] - px[xi]))
 #     if xi > 0:
-#         ansswer = min(answer, abs(points[i][0] - px[xi - 1]))
+#         answer = min(answer, abs(points[i][0] - px[xi - 1]))
     
 
 # print(-1 if answer == MAX else answer)
