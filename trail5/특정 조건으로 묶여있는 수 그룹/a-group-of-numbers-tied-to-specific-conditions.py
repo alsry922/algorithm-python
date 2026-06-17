@@ -39,6 +39,7 @@ for i in range(n - 1, -1, -1):
     else:
         R[i] = max(R[i + 1], abs(i - j) + 1)
 
+answer = max(answer, L[n - 1])
 for i in range(n - 1):
     answer = max(answer, L[i] + R[i + 1])
 
