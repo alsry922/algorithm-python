@@ -3,31 +3,31 @@ arr = list(map(int, input().split()))
 queries = [int(input()) for _ in range(m)]
 
 # Please write your code here.
-def lower_bound(target, left, right):
+def lower_bound(target):
+    l, r = 0, n - 1
     min_idx = n
-    while left <= right:
-        mid = (left + right) // 2
-        if query <= arr[mid]:
+    while l <= r:
+        mid = (l + r) // 2
+        if target <= arr[mid]:
             min_idx = min(min_idx, mid)
-            right = mid - 1
+            r = mid - 1
         else:
-            left = mid + 1
+            l = mid + 1
     return min_idx
 
-def upper_bound(target, left, right):
+def upper_bound(target):
+    l, r = 0, n - 1
     min_idx = n
-    while left <= right:
-        mid = (left + right) // 2
-        if query < arr[mid]:
+    while l <= r:
+        mid = (l + r) // 2
+        if target < arr[mid]:
             min_idx = min(min_idx, mid)
-            right = mid - 1
+            r = mid - 1
         else:
-            left = mid + 1
+            l = mid + 1
     return min_idx
 
 for query in queries:
-    left, right = 0, n - 1
-    lb = lower_bound(query, left, right)
-    ub = upper_bound(query, left, right)
-    print(ub - lb)
-    
+    lb = lower_bound(query)
+    rb = upper_bound(query)
+    print(rb - lb)
