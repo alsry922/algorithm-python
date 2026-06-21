@@ -15,6 +15,8 @@ def get_non_moo_cnt(target):
     lcm_cnt = target // math.lcm(3, 5)
     return target - (mul3_cnt + mul5_cnt - lcm_cnt)
 
+# "답이 가질 수 있는 최솟값과 최댓값이 얼마야?" 항상 확인 필요
+# N의 값이 10^9 이므로 right의 훨씬 더 커야한다.
 left, right = 1, 2 * 10 ** 9
 answer = 10 ** 10
 while left <= right:
