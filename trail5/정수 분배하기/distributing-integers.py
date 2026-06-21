@@ -2,22 +2,22 @@ n, m = map(int, input().split())
 arr = [int(input()) for _ in range(n)]
 
 # Please write your code here.
-
-def is_possible(target):
+# 후보값 x = 분배할 정수
+# x 가 줄어들 수록 각 수에서 분배할 수 있는 횟수가 많아짐
+# 단조성 확인
+def is_possible(x):
     count = 0
-    # 각 원소가 target으로 몇 번 나누어지는 지 확인
     for ele in arr:
-        count += ele // target
-    # print(target, count)
+        count += ele // x
     return count >= m
 
 left, right = 1, 100000
-MIN = 0
-answer = MIN
+answer = 0
+
 while left <= right:
     mid = (left + right) // 2
     if is_possible(mid):
-        answer = max(answer, mid)
+        answer = mid
         left = mid + 1
     else:
         right = mid - 1
