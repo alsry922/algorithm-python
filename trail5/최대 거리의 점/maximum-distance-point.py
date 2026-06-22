@@ -12,14 +12,14 @@ arr.sort()
 def can_place(x):
     last_pos = arr[0]
     cnt = 1
-    # for i in range(1, n + 1):
-    #     if arr[i] - last_pos >= x:
-    #         cnt += 1
-    #         last_pos = arr[i]
-    while bisect.bisect_left(arr, last_pos + x) < len(arr):
-        lb = bisect.bisect_left(arr, last_pos + x)
-        last_pos = arr[lb]
-        cnt += 1
+    for i in range(1, n):
+        if arr[i] - last_pos >= x:
+            cnt += 1
+            last_pos = arr[i]
+    # while bisect.bisect_left(arr, last_pos + x) < len(arr):
+    #     lb = bisect.bisect_left(arr, last_pos + x)
+    #     last_pos = arr[lb]
+    #     cnt += 1
     
     return cnt >= m
 
