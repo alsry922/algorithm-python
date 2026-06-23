@@ -7,15 +7,13 @@ arr = [int(input()) for _ in range(n)]
 # 결정함수: 최소 거리를 d라고 가정했을 때 M개 이상의 물건을 설치할 수 있는 가?
 arr.sort()
 def is_possible(d):
-    last_pos = arr[0]
+    last_idx = 0
     cnt = 1
-    while cnt < m:
-        lb = bisect.bisect_left(arr, last_pos + d)
-        if lb == n:
-            return False
-        cnt += 1
-        last_pos = max(arr[lb], last_pos + d)
-    return True
+    for i in range(1, n):
+        if arr[i] - arr[last_idx] >= d:
+            last_idx = i
+            cnt += 1
+    return cnt >= m
 
 lo, hi = 0, 10 ** 9
 answer = 1
