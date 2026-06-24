@@ -15,6 +15,9 @@ def is_possible(d):
         while last_pos + d <= x2:
             last_pos = max(x1, last_pos + d)
             cnt += 1
+
+            if cnt >= n:
+                break
     
     return cnt >= n
 
