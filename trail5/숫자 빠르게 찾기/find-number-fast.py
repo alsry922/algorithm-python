@@ -2,20 +2,21 @@ n, m = map(int, input().split())
 arr = list(map(int, input().split()))
 queries = [int(input()) for _ in range(m)]
 
+def binary_search(query):
+    left, right = 0, n - 1
+    idx = -1
+    while left <= right:
+        mid = (left + right) // 2
+        if query == arr[mid]:
+            idx = mid
+
+        if query < arr[mid]:
+            right = mid - 1
+        else:
+            left = mid + 1
+    return idx
 # Please write your code here.
 for query in queries:
-    l, r = 0, n - 1
-    pos = n
-    while l <= r:
-        mid = (l + r) // 2
-        if arr[mid] == query:
-           pos = mid
-           break
-        if query < arr[mid]:
-            r = mid - 1
-        else:
-            l = mid + 1
-    if pos == n:
-        print(-1)
-    else:
-        print(pos + 1)
+    idx = binary_search(query)
+    print(-1 if idx == -1 else idx + 1)
+        
