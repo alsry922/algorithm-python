@@ -1,4 +1,4 @@
-from sortedcontainers import SortedList
+import heapq
 N, T_max = map(int, input().split())
 d = [int(input()) for _ in range(N)]
 
@@ -17,19 +17,18 @@ def is_possible(k):
     if k == N:
         return True
     # k길이의 배열을 선언
-    stage = SortedList()
+    stage = []
     # d를 순회하며 stage를 채움
     # 그 다음 들어오는 사람이 stage에 머무는 시간일 계산할 때는,
     # 나간 사람의 시간을 더하여 stage에 추가
-    elapsed_time = 0
+    start_time = 0
     for ele in d:
         # stage가 가득 찼을 때 가장 빨리 나올 수 있는 사람을 내보냄
         if len(stage) == k:
-            elapsed_time = stage[0]
-            stage.remove(stage[0])
-        stage.add(ele + elapsed_time)
+            start_time = heapq.heappop(stage)
+        heapq.heappush(stage, ele + start_time)
     
-    return stage[-1] <= T_max
+    return max(stage) <= T_max
 
 left, right = 1, N
 answer = N
