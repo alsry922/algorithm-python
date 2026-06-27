@@ -63,7 +63,7 @@ def is_possible(x):
                         visited[nx][ny] = True
                         q.append((nx, ny))
                         cnt += 1
-            if cnt >= round((n ** 2) / 2):
+            if cnt >= round((n ** 2 + 1) // 2):
                 return True
     return False
 
