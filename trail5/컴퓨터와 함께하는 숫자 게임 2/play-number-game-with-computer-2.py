@@ -1,34 +1,35 @@
-import sys
 m = int(input())
 a, b = map(int, input().split())
 
 # Please write your code here.
-# 컴퓨터가 1 ~ 10^18의 수 중 A ~ B 까지의 수를 선택
-# A ~ B 모든 선택을 시뮬레이션 했을 때, 가장 적은 정답 시도와 가장 많은 정답 시도를 출력
-#   A~B 까지의 모든 수를 가지고 정답 시도 횟수를 구함
-#   가장 많은 시도와 가장 적인 시도를 구해서 갱신
+# 이미 있는 배열(m) 안에서 범위를 반씩 줄이며  a ~ b의 값을 찾음.
+# 이진탐색으로 a ~ b를 찾으면 됨.
+# O((b - a) * log m) 으로 시간복잡도를 만족시킴
 
-def get_cnt(x):
+# 수도코드
+# min_cnt, max_cnt = 10 ** 18, 1
+# for target in range(a, b + 1):
+#   count = binary_search(target)
+#   min_cnt = min(min_cnt, count)
+#   max_cnt = max(max_cnt, count)
+
+# 이진 탐색 횟수를 반환
+def binary_search(x):
     left, right = 1, m
-    cnt = 0
+    count = 0
     while left <= right:
-        cnt += 1
         mid = (left + right) // 2
-        # print(left, mid, right)
-        if x == mid:
-            return cnt
+        count += 1
+        if mid == x:
+            return count
         if x < mid:
             right = mid - 1
         else:
             left = mid + 1
-    return cnt
 
-
-MIN, MAX = -sys.maxsize, sys.maxsize
-min_cnt, max_cnt = MAX, MIN
-for x in range(a, b + 1):
-    cnt = get_cnt(x)
-    min_cnt = min(min_cnt, cnt)
-    max_cnt = max(max_cnt, cnt)
-
+min_cnt, max_cnt = m, 1
+for i in range(a, b + 1):
+    count = binary_search(i)
+    min_cnt = min(min_cnt, count)
+    max_cnt = max(max_cnt, count)
 print(min_cnt, max_cnt)
