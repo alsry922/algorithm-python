@@ -4,6 +4,7 @@ M, N = map(int, input().split())
 
 board = [list(map(int, input().split())) for _ in range(M)]
 colored = [list(map(int, input().split())) for _ in range(M)]
+colored = [(i, j) for i in range(M) for j in range(N) if colored[i][j] == 1] 
 visited = [
     [False] * N for _ in range(M)
 ]
@@ -61,10 +62,12 @@ def is_possible(d):
     # queue 선언
     q = deque()
     # 시작 위치 추가 및 방문 표시
-    q.append((0, 0))
-    visited[0][0] = True
     dxs, dys = [0, 1, 0, -1], [1, 0, -1, 0]
     # bfs 시작
+    vx, vy = colored[0]
+    q.append((vx, vy))
+    visited[vx][vy] = True
+    
     while q:
         cx, cy = q.popleft()
         for dx, dy in zip(dxs, dys):
@@ -75,10 +78,9 @@ def is_possible(d):
                 visited[nx][ny] = True
                 q.append((nx, ny))
 
-    for i in range(M):
-        for j in range(N):
-            if colored[i][j] == 1 and not visited[i][j]:
-                return False
+    for x, y in colored:
+        if not visited[x][y]:
+            return False
     return True
 
 left, right = 0, 10 ** 9
