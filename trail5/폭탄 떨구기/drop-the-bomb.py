@@ -34,7 +34,7 @@ def is_possible(r):
     a = 0
     bomb_cnt = 0
     while a < n:
-        a = bisect.bisect_right(x, x[a] + 2 * r)
+        a = bisect.bisect_right(x, x[a] + window)
         bomb_cnt += 1
     
     return bomb_cnt <= k
