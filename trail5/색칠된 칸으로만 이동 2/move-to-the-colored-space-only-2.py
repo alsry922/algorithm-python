@@ -1,106 +1,94 @@
 from collections import deque
+
 M, N = map(int, input().split())
 
 board = [list(map(int, input().split())) for _ in range(M)]
 colored = [list(map(int, input().split())) for _ in range(M)]
-
+visited = [
+    [False] * N for _ in range(M)
+]
 # Please write your code here.
-# M * N 크기의 격자, 상하좌우 이동, 다음 이동 칸과의 차이가 D 이하 조건으로 bfs 진행
-# 색칠된 칸끼리 이동이 가능해야 함.
-# D의 최솟값을 구하라.
+# 격자에서의 bfs
+# 이동 가능 조건: 상하좌우로 and 미방문 and 현재 위치의 값과 다음 위치의 값 차이가 D 이하
+# 색칠된 칸끼리 이동가능하다록 하는 D의 최솟값 출력
 
-# 수의 범위 0 ~ 10^9를 거꾸로 순회하여 D의 최솟값을 찾는건 불가능 -> 이미 O(10^9) 는 10억임
-# D를 가정했을 때 이 값이 답이 될 수 있는지 판별하는 결정함수 정의가 가능한가?
-# 가능하다면 이 결정함수가 단조성을 갖는가?
-# D값을 기준으로 bfs를 진행하여 답이 될수 있는지 판별 가능 -> 결정함수 O
-# D값이 특정 값 이상일 때는 항상 조건을 만족 -> 단조성 O
-# 그렇다면 이분 탐색으로 D가 정답이 될 수 있는 범위를 줄여나갈 수 있음.
+# 완전탐색 가능?
+# 수의 범위가 0 ~ 10^9임. D의 범위도 마찬가지이므로 범위가 너무큼.
+# 모든 가능한 D에 대해 완전탐색을 하는 건 시간복잡도를 만족시킬 수 없음.
+# 완전탐색 불가능
 
-# 결정함수:
-#   특정값 D를 기준으로 bfs를 진행했을 때 D 값이 답이 될 수 있는가?
-#   colored 중에 하나를 시작점으로 시작하면 됨
-#   bfs의 시간복잡도는 O(M*N)
-# D값의 범위는 0 ~ 10^9 -> O(logD) -> 약 35
-# 총 시간복잡도는 O(M * N * log D) -> 약 35만번 -> 시간제한 만족
+# 조건: bfs를 진행할 떄 색칠된 칸은 모두 방문 가능해야함.
+# D의 값이 작아질수록 이동할 수 있는 칸의 수가 적어짐 -> 조건 불만족할 수 있음.
+# D가 특정 값 이상이면 항상 조건을 만족함. 미만이면 조건을 항상 만족할 수 없음
+# 단조성이 있음. -> 이분탐색 가능 -> 결정함수를 단조성에 맞춰 설계
+# 결정함수: 특정 D값을 가정했을 때 조건을 만족할 수 있는가?
+# 결정함수는 O(N * M) -> bfs 시간복잡도
+# 이분탐색 O(log 10^9) -> 약 30번
+# 최종 시간복잡도는 O(N * M * log 10 ^ 9)
 
-# 수도 코드
-# colored_pos = []
-# for x in range(M):
-#   for y in range(N):
-#       if colored[x][y] == 1:
-#           colored_pos.append((x, y))
 
+# 수도코드
+# 결정함수
 # def is_possible(d):
-#   visited = M * N 크기의 2차원 배열(원소는 False)
-#   sx, sy = colored_pos[0] 시작점
-#   visited[sx][sy] = True 방문표시
-#   q = deque bfs 큐 선언
-#   q.append((sx, sy))
-#   dxs, dys = [0, 1, 0, -1], [1, 0, -1, 0]
-#   while q: queue가 빌 때까지 진행
-#       cx, cy = q.popleft() 현재 위치
-#       for dx, dy in zip(dxs, dys): 
-#           nx, ny = (cx + dx, cy + dy) 다음 위치
-#           다음 위치가 범위 안에 있는지, 차가 d값 이내인지
-#           if is_in_range(nx, ny) and abs(board[nx][ny] - board[cx][cy]) <= d and not visited[nx][ny]:
-#               visited[nx][ny] = True
-#               q.append((nx, ny))
-#   색칠된 점을 모두 방문했는지 확인
-#   for x, y in colored_pos:
-#       if not visited[x][y]:
-#           return False
-#   return True
+# visited 2차원 배열 선언
+# queue 선언
+# 시작 위치 queue 삽입 및 방문표시
+# bfs 진행
+# bfs 종료 후 색칠된 칸 모두 방문했는지를 확인 후 return
 
-# left, right = 0, 10 ^ 9
-# answer = right
-# while left <= right:
-#   mid = (left + right) // 2
-#   if is_possible(mid):
-#       right = mid - 1
-#       answer = min(answer, mid)
-#   else:
-#       left = mid + 1
+# bfs
+# queue를 다 소모할 때까지 진행
+# 상하좌우를 살펴보며 방문 가능한 위치인지 판단
+# 방문 가능하다면 해당 위치를 방문 표시 및 queue에 삽입
 
-colored_pos = []
-for x in range(M):
-    for y in range(N):
-        if colored[x][y] == 1:
-            colored_pos.append((x, y))
+# 방문 가능 판별 함수
 
-def is_in_range(x, y):
+# 범위 안에 있는지, 미방문 위치인지
+# return in_range(x, y) and not visited[x][y] and abs(board[x][y] - board[nx][ny]) <= d
+
+# 범위 판별 함수
+# def in_range(x, y):
+# return 0 <= x < M and 0 <= y < N
+
+def in_range(x, y):
     return 0 <= x < M and 0 <= y < N
 
 def is_possible(d):
-    visited = [
-        [False] * N for _ in range(M)
-    ]
-    sx, sy = colored_pos[0]
-    visited[sx][sy] = True 
+    # 방문표시 초기화
+    for i in range(M):
+        for j in range(N):
+            visited[i][j] = False
+    # queue 선언
     q = deque()
-    q.append((sx, sy))
+    # 시작 위치 추가 및 방문 표시
+    q.append((0, 0))
+    visited[0][0] = True
     dxs, dys = [0, 1, 0, -1], [1, 0, -1, 0]
+    # bfs 시작
     while q:
         cx, cy = q.popleft()
-        for dx, dy in zip(dxs, dys): 
-            nx, ny = (cx + dx, cy + dy)
-            if is_in_range(nx, ny) and abs(board[nx][ny] - board[cx][cy]) <= d and not visited[nx][ny]:
+        for dx, dy in zip(dxs, dys):
+            nx, ny = cx + dx, cy + dy
+            # nx, ny가 범위 안에 있고, 방문하지 않았으며, 현재 위치의 값과의 차이가 d이내인 경우
+            if in_range(nx, ny) and not visited[nx][ny] and abs(board[nx][ny] - board[cx][cy]) <= d:
+                # 방문 표시 및 queue에 추가
                 visited[nx][ny] = True
                 q.append((nx, ny))
-  
-    for x, y in colored_pos:
-        if not visited[x][y]:
-            return False
 
+    for i in range(M):
+        for j in range(N):
+            if colored[i][j] == 1 and not visited[i][j]:
+                return False
     return True
 
 left, right = 0, 10 ** 9
-answer = right
+answer = 10 ** 9
 while left <= right:
-  mid = (left + right) // 2
-  if is_possible(mid):
-      right = mid - 1
-      answer = min(answer, mid)
-  else:
-      left = mid + 1
+    mid = (left + right) // 2
+    if is_possible(mid):
+        right = mid - 1
+        answer = min(answer, mid)
+    else:
+        left = mid + 1
 
 print(answer)
