@@ -10,14 +10,14 @@ for start, end in edges:
 
 
 def dfs(curr_v):
-    global answer
+    count = 0
     for next_v in graph[curr_v]:
         if not visited[next_v]:
             visited[next_v] = True
-            dfs(next_v)
-            answer += 1
+            count += 1 + dfs(next_v)
+    
+    return count
 
-answer = 0
 visited[1] = True
-dfs(1)
+answer = dfs(1)
 print(answer)
