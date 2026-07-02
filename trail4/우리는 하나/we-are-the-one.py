@@ -34,7 +34,7 @@ def can_go(x, y, height):
     
     return not visited[x][y] and u <= abs(grid[x][y] - height) <= d
     
-# 시작점 (x, y)에서 시작하는 
+# # 시작점 (x, y)에서 시작하는 
 def bfs(start_x, start_y):
     q = deque()
     visited[start_x][start_y] = True
@@ -52,24 +52,35 @@ def bfs(start_x, start_y):
             cnt += 1
     return cnt
 
-def init_visited():
-    for x in range(n):
-        for y in range(n):
-            visited[x][y] = False
-
-def simulation(comb):
-    init_visited()
-    count = 0
-    # 시작점마다 bfs
-    for x, y in comb:
+components = []
+for x in range(n):
+    for y in range(n):
         if visited[x][y]:
             continue
-        count += bfs(x, y)
-    return count
+        count = bfs(x, y)
+        components.append(count)
 
-answer = 0
-for comb in combinations(positions, k):
-    count = simulation(comb)
-    answer = max(answer, count)
+components.sort(reverse=True)
+print(sum(components[:k]))
 
-print(answer)
+# def init_visited():
+#     for x in range(n):
+#         for y in range(n):
+#             visited[x][y] = False
+
+# def simulation(comb):
+#     init_visited()
+#     count = 0
+#     # 시작점마다 bfs
+#     for x, y in comb:
+#         if visited[x][y]:
+#             continue
+#         count += bfs(x, y)
+#     return count
+
+# answer = 0
+# for comb in combinations(positions, k):
+#     count = simulation(comb)
+#     answer = max(answer, count)
+
+# print(answer)
