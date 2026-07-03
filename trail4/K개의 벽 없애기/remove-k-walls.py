@@ -90,7 +90,7 @@ def simulate(comb):
 
 
 reached = False
-answer = 100
+answer = 10000
 for comb in combinations(wall, k):
     simulate(comb)
     if visited[r2][c2]:
