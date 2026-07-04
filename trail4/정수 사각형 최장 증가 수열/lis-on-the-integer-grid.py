@@ -12,8 +12,6 @@ pos_val = [
 ]
 dxs, dys = [0, 1, 0, -1], [1, 0, -1, 0]
 pos_val.sort(key=lambda x: -x[2])
-sx, sy, _ = pos_val[0]
-dp[sx][sy] = 1
 
 def in_range(x, y):
     return 0 <= x < n and 0 <= y < n
