@@ -15,13 +15,13 @@ segments.sort()
 #   이 방법이 예제 1, 2를 다 만족시키는 것 같음.
 
 # dp[i] = i번째 선분까지 고려했을 때 겹치지 않게 뽑을 수 있는 최대 선분의 수
+# n길이의 배열을 돌면서 매 i번째 순회마다 i-1 길이의 배열을 순회하니까
+# 시간복잡도는 O(N^2)
 dp = [1 for _ in range(n)]
 dp[0] = 1
 for i in range(1, n):
-    max_count = 0
     for j in range(i):
         # i의 시작점이 j의 끝점보다 큰가?
         if segments[i][0] > segments[j][1]:
-            max_count = max(max_count, dp[j])
-            dp[i] = max(1, max_count + 1)
+            dp[i] = max(dp[i], dp[j] + 1)
 print(max(dp))
