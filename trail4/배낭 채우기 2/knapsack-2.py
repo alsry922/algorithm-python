@@ -14,7 +14,7 @@ dp = [
 dp[0][0] = 0
 for i in range(1, N + 1):
     dp[i][0] = 0
-    
+
 for j in range(1, M + 1):
     dp[0][j] = 0
 
@@ -25,7 +25,7 @@ for i in range(1, N + 1):
         # 해당 보석을 뽑으려면 목표 무게가 현재 뽑으려는 보석 무게보다 커야함
         # 이 보석을 뽑아서 목표 무게를 만들려면, 이 보석을 뽑기 전 상태에 값이 있어야 함.
         if j >= w[i] and dp[i - 1][j - w[i]] != -1:
-            dp[i][j] = max(dp[i - 1][j], dp[i][j - w[i]] + v[i])
+            dp[i][j] = max(dp[i][j], dp[i][j - w[i]] + v[i])
 
 print(max(dp[N]))
 
