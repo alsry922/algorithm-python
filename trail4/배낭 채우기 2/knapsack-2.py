@@ -11,22 +11,15 @@ w, v = [0] + list(w), [0] + list(v)
 dp = [
     [-1] * (M + 1) for _ in range(N + 1)
 ]
-dp[0][0] = 0
-for i in range(1, N + 1):
-    dp[i][0] = 0
-
-for j in range(1, M + 1):
-    dp[0][j] = 0
+dp = [0] * (M + 1)
 
 for i in range(1, N + 1):
     for j in range(1, M + 1):
-        # 뽑을 수 없는 경우는 이전 행의 값을 가져와야 함.
-        dp[i][j] = dp[i - 1][j]
         # 해당 보석을 뽑으려면 목표 무게가 현재 뽑으려는 보석 무게보다 커야함
         # 이 보석을 뽑아서 목표 무게를 만들려면, 이 보석을 뽑기 전 상태에 값이 있어야 함.
         if j >= w[i]:
-            dp[i][j] = max(dp[i][j], dp[i][j - w[i]] + v[i])
+            dp[j] = max(dp[j], dp[j - w[i]] + v[i])
 
-print(max(dp[N]))
+print(max(dp))
 
 
