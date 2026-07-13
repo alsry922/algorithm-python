@@ -33,3 +33,7 @@ for i in range(1, n + 2):
 
 
 print(max(max(dp[n + 1]), max(dp[i][n + 1] for i in range(n + 2))))
+
+# 기억해야 할 것
+
+# 값을 계산하는데 push 방식, pull 방식 중 뭐가 더 어울리는지 한 번 고민해보기
