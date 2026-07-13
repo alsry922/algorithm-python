@@ -26,4 +26,16 @@ for i in range(MAX_T + 1):
     if dp[n][i] >= m:
         answer = min(answer, i)
 
+dp = [-1] * (MAX_T + 1)
+dp[0] = 0
+for i in range(1, n + 1):
+    for j in range(MAX_T, -1, -1):
+        if j >= time[i] and dp[j - time[i]] != -1:
+            dp[j] = max(dp[j], dp[j - time[i]] + exp[i])
+
+answer = MAX_T + 1
+for i in range(MAX_T + 1):
+    if dp[i] >= m:
+        answer = min(answer, i)
+
 print(-1 if answer == MAX_T + 1 else answer)
