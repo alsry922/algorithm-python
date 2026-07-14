@@ -22,10 +22,14 @@ for i in range(2, 2 * n + 1):
     for j in range(1, 2 * n + 1):
         # i번째로 빨간 카드를 고를 수 없는 경우
         if dp[i - 1][j - 1] == -1:
-            dp[i][j] = dp[i - 1][j] + blue[i]
+            if dp[i - 1][j] != -1:
+                dp[i][j] = dp[i - 1][j] + blue[i]
         # i번째로 빨간 카드를 고르는 경우, i번째로 파란 카드를 고르는 경우 중 큰 거
         else:
-            dp[i][j] = max(dp[i - 1][j - 1] + red[i], dp[i - 1][j] + blue[i])
+            if dp[i - 1][j] == -1:
+                dp[i][j] = dp[i - 1][j - 1] + red[i]
+            else:
+                dp[i][j] = max(dp[i - 1][j - 1] + red[i], dp[i - 1][j] + blue[i])
         
 
 print(dp[2 * n][n])
