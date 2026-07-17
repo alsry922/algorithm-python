@@ -11,16 +11,24 @@ dp = [[[MIN] * (2) for _ in range(M + 1)] for _ in range(N + 1)]
 dp[0][0][0] = 0
 # dp[0][0][1] 은 가능하지 않음
 
-for i in range(N):
+for i in range(1, N + 1):
     for j in range(M + 1):
-        # i + 1 번째 원소를 선택한 경우
+        # i번째 원소를 선택한 경우
         if j >= 1:
-            dp[i + 1][j][1] = max(dp[i][j][1], dp[i][j - 1][0]) + numbers[i + 1]
-        # i + 1 번째 원소를 선택하지 않은 경우
-        dp[i + 1][j][0] = max(dp[i][j][0], dp[i][j][1])
+            dp[i][j][1] = max(dp[i - 1][j][1], dp[i - 1][j - 1][0]) + numbers[i]
+        # else문을 두지 않는 이유는 i번째 원소를 선택햇는데 구간의 갯수가 0이 될 수 없기 때문
+        # i번째 원소를 선택하지 않는 경우
+        dp[i][j][0] = max(dp[i - 1][j][0], dp[i - 1][j][1])
 
 answer = MIN
 for i in range(1, N + 1):
     answer = max(answer, dp[i][M][0], dp[i][M][1])
 
 print(answer)
+
+
+# i + 1 번째 원소를 선택한 경우
+# if j >= 1:
+#     dp[i + 1][j][1] = max(dp[i][j][1], dp[i][j - 1][0]) + numbers[i + 1]
+# # i + 1 번째 원소를 선택하지 않은 경우
+# dp[i + 1][j][0] = max(dp[i][j][0], dp[i][j][1])
