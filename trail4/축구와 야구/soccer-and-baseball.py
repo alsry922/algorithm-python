@@ -17,16 +17,16 @@ dp = [[[MIN] * (S_SIZE + 1) for _ in range(B_SIZE + 1)] for _ in range(n + 1)]
 
 # 한 명도 뽑지 않았다면 합은 0임
 dp[0][0][0] = 0
-for i in range(1, n + 1):
+for i in range(n):
     for j in range(B_SIZE + 1):
         for k in range(S_SIZE + 1):
             # 안 뽑는 경우
-            dp[i][j][k] = dp[i - 1][j][k]
-            # i번째 학생을 축구팀으로 뽑은 경우
-            # i번째 학생을 야구팀으로 뽑은 경우
+            dp[i + 1][j][k] = dp[i][j][k]
+            # 야구 팀으로 뽑은 경우
             if j >= 1:
-                dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j - 1][k] + b[i])
+                dp[i + 1][j][k] = max(dp[i + 1][j][k], dp[i][j - 1][k] + b[i + 1])
+            # 축구 팀으로 뽑은 경우
             if k >= 1:
-                dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j][k - 1] + s[i])
+                dp[i + 1][j][k] = max(dp[i + 1][j][k], dp[i][j][k - 1] + s[i + 1])
 
 print(dp[n][B_SIZE][S_SIZE])
