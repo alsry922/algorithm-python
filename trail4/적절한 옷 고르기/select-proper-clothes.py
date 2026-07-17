@@ -25,7 +25,8 @@ dp = [[MIN] * (N + 1) for _ in range(M + 1)]
 dp[0][0] = 0
 def init():
     for i in range(1, N + 1):
-        dp[1][i] = 0
+        if s[i] <= 1 <= e[i]:
+            dp[1][i] = 0
 
 init()
 for i in range(2, M + 1):
