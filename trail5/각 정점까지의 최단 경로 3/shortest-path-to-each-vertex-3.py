@@ -1,29 +1,30 @@
-import heapq
 n, m = map(int, input().split())
 edges = [tuple(map(int, input().split())) for _ in range(m)]
-graph = [[] for _ in range(n + 1)] # 인접리스트 그래프 구현
+graph = [
+    [0 for _ in range(n + 1)] for _ in range(n + 1)
+]
 INF = float('inf')
-dist = [INF for _ in range(n + 1)]
-dist[1] = 0
+visited = [False for _ in range(n + 1)]
 # Please write your code here.
 for start, end, value in edges:
-    graph[start].append((end, value))
-
-def dijkstra(graph):
-    q = []
-
-    for i in range(1, n + 1):
-        heapq.heappush(q, (dist[i], i))
-    
-    while q:
-        min_dist, cv = heapq.heappop(q)
-        if min_dist > dist[cv]:
+    graph[start][end] = value
+dist = [INF for _ in range(n + 1)]
+dist[1] = 0
+for i in range(1, n + 1):
+    min_index = -1
+    for j in range(1, n + 1):
+        # 최단거리가 이미 구해진 거면 skip
+        if visited[j]:
             continue
-        for end, value in graph[cv]:
-            if min_dist + value < dist[end]:
-                dist[end] = min_dist + value
-                heapq.heappush(q, (dist[end], end))
-dijkstra(graph)
+        if min_index == -1 or dist[min_index] > dist[j]:
+            min_index = j
+    #
+    visited[min_index] = True
+    for j in range(1, n + 1):
+        # 간선이 존재하지 않으면 skip
+        if graph[min_index][j] == 0:
+            continue
+        dist[j] = min(dist[j], dist[min_index] + graph[min_index][j])
 
 for i in range(2, n + 1):
     print(-1 if INF == dist[i] else dist[i])
