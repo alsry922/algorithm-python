@@ -17,6 +17,8 @@ def dijkstra(graph):
     
     while q:
         min_dist, cv = heapq.heappop(q)
+        if min_dist > dist[cv]:
+            continue
         for end, value in graph[cv]:
             if min_dist + value < dist[end]:
                 dist[end] = min_dist + value
