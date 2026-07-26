@@ -37,8 +37,8 @@ while cur != end:
     candidates = []
     for e, v in graph[cur]:
         if dist[cur] == dist[e] + v:
-            candidates.append(e)
-    cur = min(candidates)
+            cur = e
+            break
     path.append(cur)
 print(dist[start])
 print(*path)
