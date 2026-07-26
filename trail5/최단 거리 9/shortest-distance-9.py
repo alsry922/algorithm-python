@@ -1,32 +1,36 @@
 import sys, heapq
 n, m = map(int, input().split())
 edges = [tuple(map(int, input().split())) for _ in range(m)]
-A, B = map(int, input().split())
+start, end = map(int, input().split())
 INF = sys.maxsize
 # Please write your code here.
-graph = [[] for _ in range(n + 1)]
-for start, end, value in edges:
-    graph[start].append((end, value))
-    graph[end].append((start, value))
+graph = [[INF for _ in range(n + 1)] for _ in range(n + 1)]
+for s, e, v in edges:
+    graph[s][e] = v
+    graph[e][s] = v
 dist = [INF for _ in range(n + 1)]
-dist[A] = 0
+dist[start] = 0
+visited = [False for _ in range(n + 1)]
 path = [0 for _ in range(n + 1)]
-heap = [(dist[A], A)]
-while heap:
-    min_dist, cur_v = heapq.heappop(heap)
-    if min_dist > dist[cur_v]:
-        continue
+for i in range(1, n + 1):
+    min_index = -1
+    for j in range(1, n + 1):
+        if visited[j]:
+            continue
+        if min_index == -1 or dist[j] < dist[min_index]:
+            min_index = j
     
-    for end, value in graph[cur_v]:
-        if min_dist + value < dist[end]:
-            dist[end] = min_dist + value
-            path[end] = cur_v
-            heapq.heappush(heap, (dist[end], end))
-    
-print(dist[B])
-end = B
+    visited[min_index] = True
+    for j in range(1, n + 1):
+        if dist[min_index] + graph[min_index][j] < dist[j]:
+            dist[j] = dist[min_index] + graph[min_index][j]
+            path[j] = min_index
+
+print(dist[end])
+cur = end
 vertices = [end]
-while end != A:
-    end = path[end]
-    vertices.append(end)
+while cur != start:
+    cur = path[cur]
+    vertices.append(cur)
+
 print(*reversed(vertices))
