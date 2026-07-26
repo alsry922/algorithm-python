@@ -4,28 +4,27 @@ n, m = map(int, input().split())
 edges = [tuple(map(int, input().split())) for _ in range(m)]
 start, end = map(int, input().split())
 INF = sys.maxsize
-graph = [[] for _ in range(n + 1)]
+graph = [[INF for _ in range(n + 1)] for _ in range(n + 1)]
 for s, e, v in edges:
-    graph[s].append((e, v))
-    graph[e].append((s, v))
-
-# 각 노드별 최단 거리를 저장할 배열
+    graph[s][e] = min(graph[s][e], v)
+    graph[e][s] = min(graph[e][s], v)
 dist = [INF for _ in range(n + 1)]
 dist[start] = 0
-# 각 노드별 최소 거리를 확정할 힙
-heap = [(dist[start], start)]
-while heap:
-    min_dist, cur_v = heapq.heappop(heap)
-    # 같은 노드가 여러 번 삽입될 수 있음.
-    # 최소 거리를 가진 요소를 heap에서 뽑는 경우, 이 노드는 최소거리가 정해진 것이라고 가정하기 때문에(greedy)
-    # 현재 cur_v의 확정된 최단 거리와, min_dist 값이 다르면 stale 요소임.
-    # 따라서 stale 요소는 skip함
-    if min_dist > dist[cur_v]:
-        continue
+visited = [False for _ in range(n + 1)]
 
-    for e, v in graph[cur_v]:
-        if min_dist + v < dist[e]:
-            dist[e] = min_dist + v
-            heapq.heappush(heap, (dist[e], e))
+for i in range(1, n + 1):
+    min_index = -1
+    for j in range(1, n + 1):
+        # 방문한 노드는 건너뜀
+        if visited[j]:
+            continue
+        # 최소값을 가지는 노드를 뽑음.
+        if min_index == - 1 or dist[j] < dist[min_index]:
+            min_index = j
+    # 노드를 뽑는다는 것은 최단 거리가 확정되었다는 것임
+    # 방문 표시
+    visited[min_index] = True
+    for j in range(1, n + 1):
+        dist[j] = min(dist[j], dist[min_index] + graph[min_index][j])
 
 print(dist[end])
