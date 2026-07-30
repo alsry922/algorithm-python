@@ -1,40 +1,35 @@
-# 1 ~ N 정점 존재, N번은 학교, 나머지는 학생 집
-# 두 정점 사이의 간선은 최대 1개, 무방향 그래프
-# 다익스트라는 특정 정점에서부터 모든 정점까지의 최단거리를 구해줌
-# 모든 정점에서부터 특정 도착점까지의 최단거리는 어떻게 구할까?
-# 모든 간선을 뒤집고, 도착점을 시작점으로 다익스트라를 진행하면 됨.
-# 현재 문제는 무방향 그래프이므로 간선을 뒤집을 필요 없음.
 import sys, heapq
-input = sys.stdin.readline
 n, m = map(int, input().split())
 edges = [tuple(map(int, input().split())) for _ in range(m)]
-graph = [[] for _ in range(n + 1)]
 INF = sys.maxsize
+# Please write your code here.
+# dijkstra
+# 특정 시점점부터 모든 정점까지의 최단 거리를 구해주는 알고리즘
+# 모든 간선에 1 이상의 가중치가 존재해야 하며, 가중치에 음수는 없어야 한다.
+#   - 모든 가중치가 1이면 bfs로 간단하고 더 빨리 문제를 해결할 수 있음.
+#   - 음수 가중치가 존재하면, A -> B 보다 A -> C -> B 처럼 더 멀리 돌아오는 경로가
+#     최단거리가 되는 경우가 존재할 수 있으므로, greedy 가정이 깨지기 때문.
+#   - 사이클이 존재해도 괜찮음.
+#   시간 복잡도는 O(V^2) or O(E log V)
+
+# 지금 문제는 특정 도착점으로부터의 모든 정점의 최단 거리를 구해야 함.
+# 이런 경우, 모든 간선을 뒤집어 도착점을 시작으로 dijkstra를 진행하면 됨.
+# 지금 문제는 무방향 그래프이므로, 간선을 뒤집을 필요 없음
+dist = [INF for _ in range(n + 1)]
+dist[n] = 0
+graph = [[] for _ in range(n + 1)]
 for s, e, v in edges:
     graph[s].append((e, v))
     graph[e].append((s, v))
-# 시작점부터 각 노드까지의 최단거리를 기록할 배열
-dist = [INF for _ in range(n + 1)]
-start = n
-dist[start] = 0
-# 각 탐색마다 최단거리를 찾도록 heap 선언
-heap = [(dist[start], start)]
+heap = [(dist[n], n)]
 while heap:
-    # heap에서 뽑힌 최소값을 가지는 노드는 최단 거리가 확정임.
-    min_dist, cur_v = heapq.heappop(heap)
-    # 최단 거리가 현재 dist에 저장된 최단거리와 다르다면 stale 요소임.
-    # 같은 노드가 여러 번 heap에 추가될 수 있기 때문
-    if min_dist > dist[cur_v]:
+    min_dist, cv = heapq.heappop(heap)
+    if min_dist > dist[cv]:
         continue
     
-    # 현재 노드와 연결된 노드들 탐색
-    for e, v in graph[cur_v]:
-        # 현재 노드까지의 최단 거리와
-        # 현재 노드 ~ e 까지의 가중치를 더한 것이
-        # 현재 e 노드의 최단거리로 기록된 값보다 작으면
-        # e 노드까지의 최단거리를 갱신
+    for e, v in graph[cv]:
         if min_dist + v < dist[e]:
             dist[e] = min_dist + v
             heapq.heappush(heap, (dist[e], e))
 
-print(max(dist[1:n]))
+print(max(dist[1:]))
